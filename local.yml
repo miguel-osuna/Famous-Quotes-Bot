@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  application:
+    build:
+      context: .
+      dockerfile: ./compose/local/application/Dockerfile
+    image: quotes_api_local
+    container_name: quotes_api
+    volumes:
+      - .:/app
+    env_file:
+      - ./.envs/.local/.application
+    ports:
+      - "8000:8000"
+    command: /start
