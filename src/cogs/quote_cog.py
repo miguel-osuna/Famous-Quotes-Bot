@@ -9,9 +9,12 @@ from util import generate_logger, Pages
 logger = generate_logger(__name__)
 
 
-class QuotePaginator(Pages):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+class QuoteCategoriesPaginator(Pages):
+    pass
+
+
+class QuoteAuthorsPaginator(Pages):
+    pass
 
 
 class QuoteCog(commands.Cog, name="Quote"):
@@ -133,199 +136,8 @@ class QuoteCog(commands.Cog, name="Quote"):
         return await super().cog_before_invoke(ctx)
 
     async def cog_after_invoke(self, ctx):
-        """ A special method that acts as a cog local post-invoek hook. """
+        """ A special method that acts as a cog local post-invoke hook. """
         return await super().cog_after_invoke(ctx)
-
-    # Commands
-    @commands.group(name="quote", aliases=["qt"], help="Commands for quote generation.")
-    async def quote(self, ctx):
-        """Commands for quote generation. Use `~help quote` to view subcommands."""
-        if ctx.invoked_subcommand is None:
-            await ctx.send(f"Incorrect usage. Use `{ctx.prefix}help quote` for help.")
-        try:
-            await ctx.message.delete()
-        except discord.HTTPException:
-            pass
-
-    @quote.command(
-        name="list",
-        aliases=["ls"],
-        brief="Sends list of all categories and authors available.",
-        help="Sends list of all categories and authors available.",
-    )
-    async def quote_list(self, ctx):
-        # Query all the categories from the database
-        # Query all the authors from the database
-
-        categories = [
-            {"name": "Love", "total": 100},
-            {"name": "Friendship", "total": 200},
-            {"name": "History", "total": 300},
-        ]
-        embed = self.create_category_list_embed(categories)
-
-        await ctx.author.send(embed=embed)
-
-    @quote.group(
-        name="generate",
-        aliases=["genr"],
-        brief="Embeds message with a random quote in the text channel.",
-        help="Embeds message with a random quote in the text channel.",
-        invoke_without_command=True,
-    )
-    async def quote_generate(
-        self, ctx, language="en", *, category_or_author: str = None,
-    ):
-        if category_or_author is not None:
-            # Check if the quote and authors are in the database
-            category_or_author_in_database = True
-
-            if category_or_author_in_database:
-
-                # Get random quote from the database according to the author or category
-                # Mock quote
-                random_quote = {
-                    "quote": "Courage is resistance to fear, mastery of fear - not absence of fear.",
-                    "author": "Mark Twain",
-                    "author_picture_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Mark_Twain_by_AF_Bradley.jpg/220px-Mark_Twain_by_AF_Bradley.jpg",
-                    "category": "Love",
-                }
-
-                embed = self.create_quote_embed(
-                    quote=random_quote["quote"],
-                    category=random_quote["category"],
-                    author=random_quote["author"],
-                    author_picture_url=random_quote["author_picture_url"],
-                    channel=ctx.channel,
-                )
-
-                # Retrieve the message that was sent to the channels
-                message = await ctx.channel.send(embed=embed)
-
-                # If the quote generate command was not sent by DM, add an emoji to the message
-                if not isinstance(ctx.channel, discord.DMChannel):
-                    await message.add_reaction("❤️")
-
-                    # To keep track of the message and its reactions,
-                    # add it to a list of single quotes sent.
-
-                    # Could also add it to the database to keep track
-                    # of different guild quotes.
-                    self.single_quotes_sent.append(message)
-
-            else:
-                await ctx.send("Couldn't find author or quote.")
-
-        else:
-            await ctx.send("Couldn't generate quote.")
-
-    @quote_generate.command(
-        name="list",
-        aliases=["ls"],
-        brief="Embeds message with a list of quotes in the text channel.",
-        help="Embeds message with a list of quotes in the text channel",
-    )
-    async def quote_generate_list(
-        self,
-        ctx,
-        language="en",
-        quote_entries: typing.Optional[int] = 10,
-        *,
-        category_or_author: str = None,
-    ):
-        if category_or_author is not None:
-            # Check if the category or author is in the database
-            category_or_author_in_database = True
-
-            if category_or_author_in_database:
-
-                # Get `quote_entries` number of quotes from the database
-                # Mock quotes
-
-                author_quotes = [
-                    {
-                        "name": "Mark Twain",
-                        "author_picture": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Mark_Twain_by_AF_Bradley.jpg/220px-Mark_Twain_by_AF_Bradley.jpg",
-                        "quote_list": [
-                            {
-                                "quote": "Good friends, good books, and a sleepy conscience: this is the ideal life.",
-                                "category": "Friendship",
-                            },
-                            {
-                                "quote": "Whenever you find yourself on the side of the majority, it is time to reform (or pause and reflect).",
-                                "category": "Wisdom",
-                            },
-                            {
-                                "quote": "Never put off till tomorrow what may be done day after tomorrow just as well.",
-                                "category": "Humor",
-                            },
-                        ],
-                    },
-                    {
-                        "name": "Frank Zappa",
-                        "author_picture": "https://images.gr-assets.com/authors/1315160559p2/22302.jpg",
-                        "quote_list": [
-                            {
-                                "quote": "Without deviation from the norm, progress is not possible.",
-                                "category": "Philosophy",
-                            },
-                            {
-                                "quote": "So many books, so little time.",
-                                "category": "Humor",
-                            },
-                        ],
-                    },
-                ]
-
-                embed = self.create_quote_list_embed(
-                    author_quote_list=author_quotes, channel=ctx.channel
-                )
-
-                # Retrieve the message that was sent to the channels
-                message = await ctx.channel.send(embed=embed)
-
-                # If the quote generate list command was not sent by DM, add an emoji to the message
-                if not isinstance(ctx.channel, discord.DMChannel):
-                    await message.add_reaction("❤️")
-
-                    # To keep track of the message and its reactions,
-                    # add it to a list of multple quotes sent.
-
-                    # Could also add it to the database to keep track
-                    # of different guild quotes.
-                    self.multiple_quotes_sent.append(message)
-
-            else:
-                await ctx.send("Couldn't find author or quote.")
-
-        else:
-            await ctx.send("Couldn't generate quote.")
-
-    @quote.command(
-        name="detect",
-        brief="Displays author and category of a given quote if it finds a match.",
-        help="Displays author and category of a given quote if it finds a match.",
-    )
-    async def quote_detect(self, ctx, *, quote=None):
-        if quote is not None:
-            # Look for the quote in the database and retrieve its author and its category
-            quote_found = True
-
-            if quote_found:
-                # Get the author and the author picture from the database
-                quote = "Never put off till tomorrow what may be done day after tomorrow just as well."
-                author = "Mark Twain"
-                author_picture = "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Mark_Twain_by_AF_Bradley.jpg/220px-Mark_Twain_by_AF_Bradley.jpg"
-
-                embed = self.create_quote_detection_embed(quote, author, author_picture)
-                await ctx.send(embed=embed)
-
-            else:
-                await ctx.send("Sorry, couldn't find an author for the quote.")
-
-        else:
-            # Notify couldn't detect the quote
-            await ctx.send("Couldn't detect the quote.")
 
 
 def setup(bot):

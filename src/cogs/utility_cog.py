@@ -14,6 +14,8 @@ class HelpPaginator(Pages):
 
     def __init__(self, help_command, ctx, entries, *, per_page=4):
         super().__init__(ctx, entries=entries, per_page=per_page)
+
+        # Add question mark emoji for help paginator
         self.reaction_emojis.append(
             ("\N{WHITE QUESTION MARK ORNAMENT}", self.show_bot_help)
         )
@@ -30,15 +32,23 @@ class HelpPaginator(Pages):
 
     def prepare_embed(self, entries, page, *, first=False):
         self.embed.clear_fields()
-        self.embed.description = self.description
         self.embed.title = self.title
+        self.embed.description = self.description
 
+        # Add Page location header
+        if self.maximum_pages:
+            self.embed.set_author(
+                name=f"Page {page}/{self.maximum_pages} ({self.total} commands)"
+            )
+
+        # Check if the client is a bot to display the support server
         if self.is_bot:
             value = (
                 "For more help, join the official bot support server: https://xyz.com"
             )
             self.embed.add_field(name="Support", value=value, inline=False)
 
+        # Add footer to show how to use the help command
         self.embed.set_footer(
             text=f'Use "{self.prefix}help command" for more info on a command.'
         )
@@ -49,19 +59,14 @@ class HelpPaginator(Pages):
                 name=signature, value=entry.short_doc or "No help given", inline=False
             )
 
-        if self.maximum_pages:
-            self.embed.set_author(
-                name=f"Page {page}/{self.maximum_pages} ({self.total} commands)"
-            )
-
     async def show_help(self):
         """ Shows this message. """
 
         self.embed.title = "Paginator help"
-        self.embed.description = "Hello! Welcome to the help page."
+        self.embed.description = "Hi! Welcome to the bot help page."
+        self.embed.clear_fields()
 
         messages = [f"{emoji} {func.__doc__}" for emoji, func in self.reaction_emojis]
-        self.embed.clear_fields()
         self.embed.add_field(
             name="What are these reactions for?",
             value="\n".join(messages),
@@ -73,6 +78,7 @@ class HelpPaginator(Pages):
         )
         await self.message.edit(embed=self.embed)
 
+        # Go back to previous page after 30 seconds
         async def go_back_to_current_page():
             await asyncio.sleep(30.0)
             await self.show_current_page()
@@ -80,11 +86,16 @@ class HelpPaginator(Pages):
         self.bot.loop.create_task(go_back_to_current_page())
 
     async def show_bot_help(self):
-        """shows how to use the bot"""
+        """ Shows how to use the bot. """
 
         self.embed.title = "Using the bot"
-        self.embed.description = "Hello! Welcome to the help page."
+        self.embed.description = "Hi! Welcome to the bot help page."
         self.embed.clear_fields()
+
+        self.embed.add_field(
+            name="How do I use this bot?",
+            value="Reading the bot signature is pretty simple.",
+        )
 
         entries = (
             ("<argument>", "This means the argument is __**required**__."),
@@ -98,11 +109,6 @@ class HelpPaginator(Pages):
             ),
         )
 
-        self.embed.add_field(
-            name="How do I use this bot?",
-            value="Reading the bot signature is pretty simple.",
-        )
-
         for name, value in entries:
             self.embed.add_field(name=name, value=value, inline=False)
 
@@ -111,6 +117,7 @@ class HelpPaginator(Pages):
         )
         await self.message.edit(embed=self.embed)
 
+        # Go back to previous page after 30 seconds
         async def go_back_to_current_page():
             await asyncio.sleep(30.0)
             await self.show_current_page()
@@ -233,6 +240,7 @@ class Utility(commands.Cog):
     """ General utility commands. """
 
     def __init__(self, bot):
+        # Switch the bot help command to the PaginatedHelpCommand
         self.bot = bot
         self.old_help_command = bot.help_command
         bot.help_command = PaginatedHelpCommand()
@@ -241,9 +249,24 @@ class Utility(commands.Cog):
     def cog_unload(self):
         self.bot.help_command = self.old_help_command
 
+    # Class Methods
+    async def cog_before_invoke(self, ctx):
+        """ A special method that acts as a cog local pre-invoke hook. """
+        await ctx.trigger_typing()
+        return await super().cog_before_invoke(ctx)
+
+    async def cog_after_invoke(self, ctx):
+        """ A special method that acts as a cog local post-invoke hook. """
+        return await super().cog_after_invoke(ctx)
+
     # Commands
     @commands.is_owner()
-    @commands.command(name="load", help="Loads a specified extension/cog", hidden=True)
+    @commands.command(
+        name="load",
+        brief="Loads a specified extension/cog",
+        help="Loads a specified extension/cog",
+        hidden=True,
+    )
     async def load_cog(self, ctx, *, cog: str):
         """ Command which loads a module. """
         try:
@@ -255,7 +278,10 @@ class Utility(commands.Cog):
 
     @commands.is_owner()
     @commands.command(
-        name="unload", help="Unloads a specified extension/cog", hidden=True
+        name="unload",
+        brief="Unloads a specified extension/cog",
+        help="Unloads a specified extension/cog",
+        hidden=True,
     )
     async def unload_cog(self, ctx, *, cog: str):
         """ Command which unloads a module. """
@@ -268,7 +294,10 @@ class Utility(commands.Cog):
 
     @commands.is_owner()
     @commands.command(
-        name="reload", help="Reloads a specific extension/cog", hidden=True
+        name="reload",
+        brief="Reloads a specified extension/cog",
+        help="Reloads a specific extension/cog",
+        hidden=True,
     )
     async def reload_cog(self, ctx, *, cog: str):
         """ Command which reloads a module. """

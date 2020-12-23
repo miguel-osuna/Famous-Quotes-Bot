@@ -11,9 +11,12 @@ class CannotPaginate(Exception):
 class Pages:
     """Implements a paginator that queries the user for the
     pagination interface.
+
     Pages are 1-index based, not 0-index based.
+
     If the user does not reply within 2 minutes then the pagination
     interface exits automatically.
+
     Parameters
     ------------
     ctx: Context
@@ -50,7 +53,6 @@ class Pages:
         if left_over:
             pages += 1
 
-        # Check if
         self.maximum_pages = pages
         self.embed = discord.Embed(colour=discord.Colour.blue())
         self.paginating = len(entries) > per_page
@@ -222,6 +224,7 @@ class Pages:
         # Edit the same message with the new embed
         await self.message.edit(content=None, embed=embed)
 
+        # Go back to previous page after 60 seconds
         async def go_back_to_current_page():
             await asyncio.sleep(60.0)
             await self.show_current_page()
