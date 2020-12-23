@@ -4,9 +4,14 @@ from datetime import datetime
 import discord
 from discord.ext import commands, tasks
 
-from util import generate_logger
+from util import generate_logger, Pages
 
 logger = generate_logger(__name__)
+
+
+class QuotePaginator(Pages):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 class QuoteCog(commands.Cog, name="Quote"):
