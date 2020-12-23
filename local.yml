@@ -5,8 +5,8 @@ services:
     build:
       context: .
       dockerfile: ./compose/local/application/Dockerfile
-    image: quotes_api_local
-    container_name: quotes_api
+    image: famous_quotes_bot_local
+    container_name: famous_quotes_bot
     volumes:
       - .:/app
     env_file:
