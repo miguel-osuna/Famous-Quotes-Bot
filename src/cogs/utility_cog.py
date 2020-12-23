@@ -1,3 +1,4 @@
+import os
 import asyncio
 import itertools
 
@@ -7,6 +8,8 @@ from discord.ext import commands, tasks
 from util import generate_logger, Pages
 
 logger = generate_logger(__name__)
+
+SUPPORT_SERVER_INVITE_URL = os.getenv("SUPPORT_SERVER_INVITE_URL")
 
 
 class HelpPaginator(Pages):
@@ -42,10 +45,9 @@ class HelpPaginator(Pages):
             )
 
         # Check if the client is a bot to display the support server
+        server_invite_url = SUPPORT_SERVER_INVITE_URL
         if self.is_bot:
-            value = (
-                "For more help, join the official bot support server: https://xyz.com"
-            )
+            value = f"For more help, join the official bot support server: {server_invite_url}"
             self.embed.add_field(name="Support", value=value, inline=False)
 
         # Add footer to show how to use the help command

@@ -8,6 +8,8 @@ from util import generate_logger
 
 logger = generate_logger(__name__)
 
+BOT_INVITE_URL = os.getenv("BOT_INVITE_URL")
+SUPPORT_SERVER_INVITE_URL = os.getenv("SUPPORT_SERVER_INVITE_URL")
 VERSION = os.getenv("VERSION")
 
 
@@ -132,7 +134,7 @@ class StatsCog(commands.Cog, name="Stats"):
         # Embed variables
         version = VERSION
         start_datetime = datetime(2020, 2, 10, 14, 40)
-        server_invite_url = "https://discord.gg/n6ubSZS"
+        server_invite_url = SUPPORT_SERVER_INVITE_URL
         total_members = len(self.bot.users)
         commands = len(self.bot.commands)
 
@@ -173,8 +175,8 @@ class StatsCog(commands.Cog, name="Stats"):
     async def join(self, ctx):
         """ Sends a link to add Famous Quotes Bot to your server. """
         version = VERSION
-        bot_invite_url = "https://discord.com/api/oauth2/authorize?client_id=733908127497322517&permissions=8&scope=bot"
-        server_invite_url = "https://discord.gg/n6ubSZS"
+        bot_invite_url = BOT_INVITE_URL
+        server_invite_url = SUPPORT_SERVER_INVITE_URL
         embed = self.create_join_embed(version, bot_invite_url, server_invite_url)
         await ctx.send(embed=embed)
 

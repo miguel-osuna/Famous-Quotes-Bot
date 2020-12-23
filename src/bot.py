@@ -9,6 +9,9 @@ from util import generate_logger
 
 logger = generate_logger(__name__)
 
+SUPPORT_SERVER_INVITE_URL = os.getenv("SUPPORT_SERVER_INVITE_URL")
+BOT_INVITE_URL = os.getenv("BOT_INVITE_URL")
+
 
 class FamousQuotesBot(commands.Bot):
     """ Discord Bot Client. """
@@ -52,9 +55,11 @@ class FamousQuotesBot(commands.Bot):
         # Find the first text channel available
 
         # If general channel exists, create message
-        greeting_message = """ Hi there, I'm Famous Quotes Bot, thanks for adding me to your server.\n
+        support_server_invite_url = SUPPORT_SERVER_INVITE_URL
+
+        greeting_message = f""" Hi there, I'm Famous Quotes Bot, thanks for adding me to your server.\n
                                To get started, use `~help` to check more information about me.\n
-                               If you need help or find any error, join my support server at https://xyz.com """
+                               If you need help or find any error, join my support server at {support_server_invite_url} """
 
         # Embed message into general channel
 
@@ -63,8 +68,10 @@ class FamousQuotesBot(commands.Bot):
         # Find the first text channel available
 
         # If general channel exists, create message
-        leave_message = """ Thanks for adding Famous Quotes Bot to your server.\n
-                            If you wish to add it again, use https://addbot.com\n
+        bot_invite_url = BOT_INVITE_URL
+
+        leave_message = f""" Thanks for adding Famous Quotes Bot to your server.\n
+                            If you wish to add it again, use {bot_invite_url}\n
                             Have a nice day! """
 
 
