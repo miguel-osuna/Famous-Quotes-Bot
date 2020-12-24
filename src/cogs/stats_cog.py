@@ -183,9 +183,11 @@ class StatsCog(commands.Cog, name="Stats"):
 
 def setup(bot):
     """ Sets up the stats cog for the bot. """
+    logger.info("Loading Stats Cog")
     bot.add_cog(StatsCog(bot))
 
 
 def teardown(bot):
     """ Tears down the stats cog for the bot. """
+    logger.info("Unloading Stats Cog")
     bot.remove_cog("stats_cog")
