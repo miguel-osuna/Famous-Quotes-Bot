@@ -1,16 +1,13 @@
 import os
 import requests
 
-QUOTES_API_URL = os.getenv("QUOTES_API_URL")
-
 
 class URLs:
     def __init__(self):
-        self.base = QUOTES_API_URL
+        self.base = os.getenv("QUOTES_API_URL")
         self.api_version = "/api/v1"
 
         # Quotes
-        self.quote = "/quote"
         self.quotes = "/quotes"
         self.random_quote = "/quotes/random"
 
@@ -23,10 +20,6 @@ class URLs:
     def base_url(self):
         """ Returns the api base url. """
         return self.base + self.api_version
-
-    def quote_url(self):
-        """ Returns the api quote resource url. """
-        return self.base + self.api_version + self.quote
 
     def quotes_url(self):
         """ Returns the api quotes resources url. """
@@ -89,41 +82,46 @@ class QuotesApi:
 
     def get_quote(self, quote_id, query_params=None):
         """ Get quote resource by id. """
-        quote_url = self.url.quote_url() + f"/{quote_id}"
-        return self.__get_data(quote_url, query_params)
+        quotes_url = self.url.quotes_url() + f"/{quote_id}"
+        return self.__get_data(quotes_url, query_params)
 
     def put_quote(self, quote_id, data):
         """ Update quote resource by id. """
-        quote_url = self.url.quote_url() + f"/{quote_id}"
-        return self.__put_data(quote_url, data)
+        quotes_url = self.url.quotes_url() + f"/{quote_id}"
+        return self.__put_data(quotes_url, data)
 
     def patch_quote(self, quote_id, data):
         """ Patch quote resource by id. """
-        quote_url = self.url.quote_url() + f"/{quote_id}"
-        return self.__patch_data(quote_url, data)
+        quotes_url = self.url.quotes_url() + f"/{quote_id}"
+        return self.__patch_data(quotes_url, data)
 
     def delete_quote(self, quote_id):
         """ Delete quote resource by id. """
-        quote_url = self.url.quote_url() + f"/{quote_id}"
-        return self.__delete_data(quote_url)
+        quotes_url = self.url.quotes_url() + f"/{quote_id}"
+        return self.__delete_data(quotes_url)
 
     def post_quote(self, data):
         """ Creates quote resource. """
         quotes_url = self.url.quotes_url()
         return self.__post_data(quotes_url, data)
 
+    def get_random_quote(self, query_params=None):
+        """ Get random quote resource. """
+        quotes_url = self.url.random_quote_url()
+        return self.__get_data(quotes_url, query_params)
+
     def get_all_quotes(self, query_params=None):
-        """ Gets list of quote resources. """
+        """ Get list of quote resources. """
         quotes_url = self.url.quotes_url()
         return self.__get_data(quotes_url, query_params)
 
     def get_all_authors(self, query_params=None):
-        """ Gets list of author resources. """
+        """ Get list of author resources. """
         authors_url = self.url.authors_url()
         return self.__get_data(authors_url, query_params)
 
     def get_all_tags(self):
-        """ Gets list of tag resources. """
+        """ Get list of tag resources. """
         tags_url = self.url.tags_url()
         return self.__get_data(tags_url)
 

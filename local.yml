@@ -12,5 +12,5 @@ services:
     env_file:
       - ./.envs/.local/.application
     ports:
-      - "8000:8000"
+      - "5000:5000"
     command: /start
