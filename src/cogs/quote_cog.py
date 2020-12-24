@@ -24,22 +24,23 @@ class QuoteCog(commands.Cog, name="Quote"):
         self.multiple_quotes_sent = []
 
     def create_category_list_embed(self, categories):
-        """ Creates an embed to display the categories available and their quotes. """
+        """ Creates an embed to display the categories available. """
         category_names = ""
-        category_totals = ""
 
         for category in categories:
             category_names += "{}\n".format(category["name"])
-            category_totals += "*{}*\n".format(category["total"])
 
         embed = discord.Embed(title="Quote Categories", colour=discord.Colour.blue())
         embed.add_field(name="Category", value=category_names)
-        embed.add_field(name="Quotes", value=category_totals)
 
         # Add timestamp to the embed
         embed.timestamp = datetime.utcnow()
 
         return embed
+
+    def create_author_list_embed(self, authors):
+        """ Creates an embed to display the authors available. """
+        pass
 
     def create_quote_embed(self, quote, author, category, author_picture_url, channel):
         """ Creates an embed to display a quote. """
@@ -138,6 +139,54 @@ class QuoteCog(commands.Cog, name="Quote"):
     async def cog_after_invoke(self, ctx):
         """ A special method that acts as a cog local post-invoke hook. """
         return await super().cog_after_invoke(ctx)
+
+    # Commands
+    @commands.command(
+        name="quote",
+        aliases=["qt"],
+        brief="Sends a quote by author and/or tags.",
+        help="Sends a quote by author and/or tags.",
+    )
+    async def quote(self, ctx):
+        pass
+
+    @commands.command(
+        name="quotes",
+        aliases=["qts"],
+        brief="Sends a list of quotes by author and/or tags.",
+        help="Sends a list of quotes by author and/or tags.",
+    )
+    async def quotes(self, ctx):
+        pass
+
+    @commands.command(
+        name="tags",
+        aliases=["tgs"],
+        brief="Sends a list of all tags available.",
+        help="Sends a list of all tags available.",
+    )
+    async def quote_tags(self, ctx):
+        """ Sends a list of all tags available. """
+        pass
+
+    @commands.command(
+        name="authors",
+        aliases=["auts"],
+        brief="Sends a list of all the authors available.",
+        help="Sends a list of all the authors available.",
+    )
+    async def quote_authors(self, ctx):
+        """ Sends a list of all the authors available. """
+        pass
+
+    @commands.command(
+        name="random",
+        aliases=["rnd"],
+        brief="Embeds a message with a random quote in the text channel.",
+        help="Embeds a message with a random quote in the text channel.",
+    )
+    async def random_quote(self, ctx):
+        pass
 
 
 def setup(bot):
