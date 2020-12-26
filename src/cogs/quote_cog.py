@@ -4,7 +4,7 @@ from datetime import datetime
 import discord
 from discord.ext import commands, tasks
 
-from util import generate_logger, Pages, QuotesApi
+from util import generate_logger, Pages, QuotesApi, CacheDict
 
 logger = generate_logger(__name__)
 
@@ -26,8 +26,7 @@ class QuoteDetectPaginator(Pages):
 class QuoteCog(commands.Cog, name="Quote"):
     def __init__(self, bot):
         self.bot = bot
-        self.single_quotes_sent = []
-        self.multiple_quotes_sent = []
+        self.quote_embeds = CacheDict(1000)
         self.api = QuotesApi(QUOTES_API_KEY)
 
     def create_quote_embed(self, quote, author, tags, author_picture_url, channel):
@@ -76,13 +75,13 @@ class QuoteCog(commands.Cog, name="Quote"):
 
     def create_tag_list_embed(self, tags):
         """ Creates an embed to display the categories available. """
-        category_names = ""
+        tag_names = ""
 
-        for category in categories:
-            category_names += "{}\n".format(category["name"])
+        for tag in tags:
+            tag_names += "{}\n".format(tag["name"])
 
         embed = discord.Embed(title="Quote Categories", colour=discord.Colour.blue())
-        embed.add_field(name="Category", value=category_names)
+        embed.add_field(name="Category", value=tag_names)
 
         # Add timestamp to the embed
         embed.timestamp = datetime.utcnow()
@@ -118,7 +117,6 @@ class QuoteCog(commands.Cog, name="Quote"):
         it can be sent to him by using DM or it can be saved to their list of personal quotes, 
         it all depends on the reaction used. 
         """
-        # await reaction.channel.send("This is from quote")
 
         # Check that the reaction channels is not done on a private channel and the user is not a bot
         if not isinstance(reaction.message.channel, discord.DMChannel) and not user.bot:
@@ -126,24 +124,15 @@ class QuoteCog(commands.Cog, name="Quote"):
             if reaction.emoji == "❤️":
                 # Get the ID from the message that was reacted to
                 message_id = reaction.message.id
-                message_embed = reaction.message.embeds[0]
-
-                # Remove the footer from the embed to send it to the user
-                message_embed.set_footer(text=discord.Embed.Empty)
 
                 # Check if the message that was reacted is a quote embed message
-                for quote_message in self.single_quotes_sent:
-                    if message_id == quote_message.id:
-                        # Create a DM channel with the user to send the embed
-                        await user.create_dm()
-                        await user.dm_channel.send(embed=message_embed)
+                if message_id in self.quote_embeds:
+                    # Get the embed from the dictionary
+                    embed = self.quote_embeds[message_id]
 
-                # Now check for the multiple quote embed messages
-                for quote_message in self.multiple_quotes_sent:
-                    if message_id == quote_message.id:
-                        # Create a DM channel with the user to send the embed
-                        await user.create_dm()
-                        await user.dm_channel.send(embed=message_embed)
+                    # Create a DM channel with the user to send the embed
+                    await user.create_dm()
+                    await user.dm_channel.send(embed=embed)
 
     # Class Methods
     async def cog_before_invoke(self, ctx):
@@ -158,7 +147,7 @@ class QuoteCog(commands.Cog, name="Quote"):
     # Commands
     @commands.command(
         name="quote",
-        aliases=["random"],
+        aliases=["qt", "random"],
         brief="Sends a quote by author and/or tags.",
         help="Sends a quote by author and/or tags.",
     )
@@ -190,9 +179,12 @@ class QuoteCog(commands.Cog, name="Quote"):
             if not isinstance(ctx.channel, discord.DMChannel):
                 await message.add_reaction("❤️")
 
-                # To keep track of the message and its reactions,
-                # add it to a hash map
-                self.single_quotes_sent.append(message)
+                # Use dictionary as cache to keep track of quote embeds
+                # for possible reactions
+                embed = message.embeds[0]
+                embed.set_footer(text=discord.Embed.Empty)
+                embed.timestamp = discord.Embed.Empty
+                self.quote_embeds[message.id] = embed
 
         except Exception:
             logger.error("Sorry, could not get quote.")
@@ -205,8 +197,34 @@ class QuoteCog(commands.Cog, name="Quote"):
         brief="Sends a list of quotes by author and/or tags.",
         help="Sends a list of quotes by author and/or tags.",
     )
-    async def quotes(self, ctx):
-        pass
+    async def quotes(
+        self, ctx, num_quotes: int = None, tags: str = None, *, author: str = None
+    ):
+        try:
+            # Get list of quotes filtered by tags and author from the api
+            query_params = {}
+
+            if num_quotes is not None:
+                query_params["tags"] = tags
+
+            if author is not None:
+                query_params["author"] = author
+
+            quotes = self.api.get_all_quotes(query_params=query_params).json()
+
+            # Check for any matches
+            if len(quotes["records"]) > 0:
+                # Create paginated embed and send it over
+                # await ctx.channel.send(embed=embed)
+                pass
+
+            else:
+                raise Exception("No matches found.")
+
+        except Exception:
+            logger.error("Could not find any matches")
+            embed = self.create_error_embed("Sorry, could not find any matches.")
+            await ctx.channel.send(embed=embed)
 
     @commands.command(
         name="tags",
@@ -216,7 +234,18 @@ class QuoteCog(commands.Cog, name="Quote"):
     )
     async def quote_tags(self, ctx):
         """ Sends a list of all tags available. """
-        pass
+        try:
+            # Get list of tags available from the api
+            tags = self.api.get_all_tags().json()
+
+            # Create paginated embed and send it over
+            # await ctx.channel.send(embed=embed)
+            pass
+
+        except Exception:
+            logger.error("Could not get available tags")
+            embed = self.create_error_embed("Sorry, could not get available tags.")
+            await ctx.channel.send(embed=embed)
 
     @commands.command(
         name="authors",
@@ -226,7 +255,18 @@ class QuoteCog(commands.Cog, name="Quote"):
     )
     async def quote_authors(self, ctx):
         """ Sends a list of all the authors available. """
-        pass
+        try:
+            # Get list of authors available from the api
+            authors = self.api.get_all_authors().json()
+
+            # Create paginated embed and send it over
+            # await ctx.channel.send(embed=embed)
+            pass
+
+        except Exception:
+            logger.error("Could not get available authors")
+            embed = self.create_error_embed("Sorry, could not get available authors.")
+            await ctx.channel.send(embed=embed)
 
     @commands.command(
         name="detect",
@@ -249,8 +289,8 @@ class QuoteCog(commands.Cog, name="Quote"):
                 raise Exception("No matches were found.")
 
         except Exception:
-            logger.error("Could not find any quote matches.")
-            embed = self.create_error_embed("Sorry, could not find any quote matches.")
+            logger.error("Could not find any matches.")
+            embed = self.create_error_embed("Sorry, could not find any matches.")
             await ctx.channel.send(embed=embed)
 
 
