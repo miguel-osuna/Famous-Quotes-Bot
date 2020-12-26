@@ -11,22 +11,10 @@ logger = generate_logger(__name__)
 QUOTES_API_KEY = os.getenv("QUOTES_API_KEY")
 
 
-class QuotesPaginator(Pages):
-    pass
-
-
-class QuoteAuthorsPaginator(Pages):
-    pass
-
-
-class QuoteDetectPaginator(Pages):
-    pass
-
-
 class QuoteCog(commands.Cog, name="Quote"):
     def __init__(self, bot):
         self.bot = bot
-        self.quote_embeds = CacheDict(1000)
+        self.quote_embeds = CacheDict(10000)
         self.api = QuotesApi(QUOTES_API_KEY)
 
     def create_quote_embed(self, quote, author, tags, author_picture_url, channel):
@@ -42,64 +30,20 @@ class QuoteCog(commands.Cog, name="Quote"):
         if not isinstance(channel, discord.DMChannel):
             embed.set_footer(text="React with ❤️ to forward this quote to your inbox")
 
-        # Add timestamp to the embed
         embed.timestamp = datetime.utcnow()
-        return embed
-
-    def create_quote_list_embed(self, author_quote_list, channel):
-        """ Creates an embed to display a list of quotes. """
-
-        embed = discord.Embed(colour=discord.Colour.blue())
-
-        for author_dict in author_quote_list:
-            quote_entries = ""
-            author_name = author_dict["name"]
-
-            for author_quote in author_dict["quote_list"]:
-                quote_entries += "📜 {} ({})\n\n".format(
-                    author_quote["quote"], author_quote["category"]
-                )
-
-            # Add author and its quotes
-            embed.add_field(
-                name=f"*{author_name}*", value=f"```{quote_entries}```", inline=False,
-            )
-
-        if not isinstance(channel, discord.DMChannel):
-            embed.set_footer(text="React with ❤️ to forward this quote to your inbox.")
-
-        # Add timestamp to the embed
-        embed.timestamp = datetime.utcnow()
-
         return embed
 
     def create_tag_list_embed(self, tags):
-        """ Creates an embed to display the categories available. """
+        """ Creates an embed to display the tags available. """
         tag_names = ""
 
-        for tag in tags:
-            tag_names += "{}\n".format(tag["name"])
+        for tag in sorted(tags):
+            tag_names += "{}\n".format(tag)
 
-        embed = discord.Embed(title="Quote Categories", colour=discord.Colour.blue())
-        embed.add_field(name="Category", value=tag_names)
+        embed = discord.Embed(title="Quote Tags", colour=discord.Colour.blue())
+        embed.description = tag_names
 
-        # Add timestamp to the embed
         embed.timestamp = datetime.utcnow()
-
-        return embed
-
-    def create_author_list_embed(self, authors):
-        """ Creates an embed to display the authors available. """
-        pass
-
-    def create_quote_detection_embed(self, quote, author, author_picture):
-        """ Creates an embed to tell the user if a quote is found. """
-        embed = discord.Embed(colour=discord.Colour.blue())
-        embed.title = "Quote from *{}*".format(author)
-        embed.description = f"```{quote}```"
-        embed.set_thumbnail(url=author_picture)
-        embed.timestamp = datetime.utcnow()
-
         return embed
 
     def create_error_embed(self, message):
@@ -192,41 +136,6 @@ class QuoteCog(commands.Cog, name="Quote"):
             await ctx.channel.send(embed=embed)
 
     @commands.command(
-        name="quotes",
-        aliases=["qts"],
-        brief="Sends a list of quotes by author and/or tags.",
-        help="Sends a list of quotes by author and/or tags.",
-    )
-    async def quotes(
-        self, ctx, num_quotes: int = None, tags: str = None, *, author: str = None
-    ):
-        try:
-            # Get list of quotes filtered by tags and author from the api
-            query_params = {}
-
-            if num_quotes is not None:
-                query_params["tags"] = tags
-
-            if author is not None:
-                query_params["author"] = author
-
-            quotes = self.api.get_all_quotes(query_params=query_params).json()
-
-            # Check for any matches
-            if len(quotes["records"]) > 0:
-                # Create paginated embed and send it over
-                # await ctx.channel.send(embed=embed)
-                pass
-
-            else:
-                raise Exception("No matches found.")
-
-        except Exception:
-            logger.error("Could not find any matches")
-            embed = self.create_error_embed("Sorry, could not find any matches.")
-            await ctx.channel.send(embed=embed)
-
-    @commands.command(
         name="tags",
         aliases=["tgs"],
         brief="Sends a list of all tags available.",
@@ -237,60 +146,14 @@ class QuoteCog(commands.Cog, name="Quote"):
         try:
             # Get list of tags available from the api
             tags = self.api.get_all_tags().json()
+            print(tags["tags"])
 
-            # Create paginated embed and send it over
-            # await ctx.channel.send(embed=embed)
-            pass
+            embed = self.create_tag_list_embed(list(tags["tags"]))
+            await ctx.channel.send(embed=embed)
 
         except Exception:
             logger.error("Could not get available tags")
             embed = self.create_error_embed("Sorry, could not get available tags.")
-            await ctx.channel.send(embed=embed)
-
-    @commands.command(
-        name="authors",
-        aliases=["auts"],
-        brief="Sends a list of all the authors available.",
-        help="Sends a list of all the authors available.",
-    )
-    async def quote_authors(self, ctx):
-        """ Sends a list of all the authors available. """
-        try:
-            # Get list of authors available from the api
-            authors = self.api.get_all_authors().json()
-
-            # Create paginated embed and send it over
-            # await ctx.channel.send(embed=embed)
-            pass
-
-        except Exception:
-            logger.error("Could not get available authors")
-            embed = self.create_error_embed("Sorry, could not get available authors.")
-            await ctx.channel.send(embed=embed)
-
-    @commands.command(
-        name="detect",
-        aliases=["det"],
-        brief="Tries to find a match for a quote.",
-        help="Tries to find a match for a quote.",
-    )
-    async def detect_quote(self, ctx, text: str):
-        try:
-            # Get list of quotes from the api
-            quotes = self.api.get_all_quotes(query_params={"query": text}).json()
-
-            # Check for any matches
-            if len(quotes["records"]) > 0:
-                # Create paginated embed and send it over
-                # await ctx.channel.send(embed=embed)
-                pass
-
-            else:
-                raise Exception("No matches were found.")
-
-        except Exception:
-            logger.error("Could not find any matches.")
-            embed = self.create_error_embed("Sorry, could not find any matches.")
             await ctx.channel.send(embed=embed)
 
 
