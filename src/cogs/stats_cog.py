@@ -18,6 +18,7 @@ class StatsCog(commands.Cog, name="Stats"):
 
     def __init__(self, bot):
         self.bot = bot
+        self.uptime = datetime.now()
 
     def get_time_difference(self, start_datetime, end_datetime):
         delta = end_datetime - start_datetime
@@ -122,8 +123,7 @@ class StatsCog(commands.Cog, name="Stats"):
     @commands.command(name="uptime", help="Check the bots uptime")
     async def uptime(self, ctx):
         """ Tells how long the bot has been up for. """
-        # Get the stating datetime variable from the bots database
-        start_datetime = datetime(2020, 2, 10, 14, 40)
+        start_datetime = datetime(2020, 12, 25)
 
         embed = self.create_uptime_embed(start_datetime)
         await ctx.send(embed=embed)
@@ -133,7 +133,7 @@ class StatsCog(commands.Cog, name="Stats"):
         """ Tells you information about the bot itself. """
         # Embed variables
         version = VERSION
-        start_datetime = datetime(2020, 2, 10, 14, 40)
+        start_datetime = datetime(2020, 12, 25)
         server_invite_url = SUPPORT_SERVER_INVITE_URL
         total_members = len(self.bot.users)
         commands = len(self.bot.commands)
