@@ -14,6 +14,7 @@ bpython = "*"
 
 [packages]
 "discord.py" = "*"
+requests = "*"
 
 [scripts]
 
