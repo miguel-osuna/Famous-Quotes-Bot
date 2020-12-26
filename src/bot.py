@@ -46,7 +46,7 @@ class FamousQuotesBot(commands.Bot):
         )
         await self.change_presence(status=status, activity=activity, afk=False)
 
-        print(
+        logger.info(
             f"\nLogged in as '{self.user.name}'\n(id: {self.user.id})\nVersion: {discord.__version__}\n"
         )
 

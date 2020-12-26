@@ -146,7 +146,6 @@ class QuoteCog(commands.Cog, name="Quote"):
         try:
             # Get list of tags available from the api
             tags = self.api.get_all_tags().json()
-            print(tags["tags"])
 
             embed = self.create_tag_list_embed(list(tags["tags"]))
             await ctx.channel.send(embed=embed)
