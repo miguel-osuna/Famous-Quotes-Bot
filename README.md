@@ -3,7 +3,7 @@
 ## :book: Description
 A discord.py bot for famous quotes.
 
-### :darts: Features
+### :dart: Features
 - Quote generation
 - Bot information
 - Help paginator
