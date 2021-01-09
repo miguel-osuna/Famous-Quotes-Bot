@@ -3,7 +3,6 @@ from os.path import dirname, abspath, join
 
 # File paths
 BASE_PROJECT_PATH = dirname(dirname((abspath(__file__))))
-LANGUAGES_PATH = join(BASE_PROJECT_PATH, "data", "input", "langs")
 COGS_PATH = join(BASE_PROJECT_PATH, "src", "cogs")
 
 # Discord Bot
