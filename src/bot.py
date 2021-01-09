@@ -6,11 +6,15 @@ import discord
 from discord.ext import commands
 
 from util import generate_logger
+from config import (
+    SUPPORT_SERVER_INVITE_URL,
+    BOT_INVITE_URL,
+    DISCORD_TOKEN,
+    COGS_PATH,
+    BASE_PROJECT_PATH,
+)
 
 logger = generate_logger(__name__)
-
-SUPPORT_SERVER_INVITE_URL = os.getenv("SUPPORT_SERVER_INVITE_URL")
-BOT_INVITE_URL = os.getenv("BOT_INVITE_URL")
 
 
 class FamousQuotesBot(commands.Bot):
@@ -57,7 +61,7 @@ class FamousQuotesBot(commands.Bot):
         # If general channel exists, create message
         support_server_invite_url = SUPPORT_SERVER_INVITE_URL
 
-        greeting_message = f""" Hi there, I'm Famous Quotes Bot, thanks for adding me to your server.\n
+        greeting_message = f"""Hi there, I'm Famous Quotes Bot, thanks for adding me to your server.\n
                                To get started, use `~help` to check more information about me.\n
                                If you need help or find any error, join my support server at {support_server_invite_url} """
 
@@ -77,9 +81,6 @@ class FamousQuotesBot(commands.Bot):
 
 if __name__ == "__main__":
     # Bot configuaration
-    COGS_PATH = os.getenv("COGS_PATH")
-    DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
-
     bot_description = """ Are you looking for a Quote? Famous Quotes Bot is here 
                           to the rescue!\nSearch quotes by author or genre with 
                           very simple commands."""

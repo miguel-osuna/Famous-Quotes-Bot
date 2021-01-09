@@ -6,10 +6,10 @@ import discord
 from discord.ext import commands, tasks
 
 from util import generate_logger, Pages
+from config import SUPPORT_SERVER_INVITE_URL
 
 logger = generate_logger(__name__)
 
-SUPPORT_SERVER_INVITE_URL = os.getenv("SUPPORT_SERVER_INVITE_URL")
 
 
 class HelpPaginator(Pages):

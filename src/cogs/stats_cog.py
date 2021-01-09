@@ -5,12 +5,9 @@ import discord
 from discord.ext import commands, tasks
 
 from util import generate_logger
+from config import BOT_INVITE_URL, SUPPORT_SERVER_INVITE_URL, VERSION
 
 logger = generate_logger(__name__)
-
-BOT_INVITE_URL = os.getenv("BOT_INVITE_URL")
-SUPPORT_SERVER_INVITE_URL = os.getenv("SUPPORT_SERVER_INVITE_URL")
-VERSION = os.getenv("VERSION")
 
 
 class StatsCog(commands.Cog, name="Stats"):

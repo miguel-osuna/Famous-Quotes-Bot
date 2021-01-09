@@ -5,10 +5,9 @@ import discord
 from discord.ext import commands, tasks
 
 from util import generate_logger, Pages, QuotesApi, CacheDict
+from config import QUOTES_API_KEY
 
 logger = generate_logger(__name__)
-
-QUOTES_API_KEY = os.getenv("QUOTES_API_KEY")
 
 
 class QuoteCog(commands.Cog, name="Quote"):

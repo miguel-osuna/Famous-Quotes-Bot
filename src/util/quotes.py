@@ -1,10 +1,12 @@
 import os
 import requests
 
+from config import QUOTES_API_URL
+
 
 class URLs:
     def __init__(self):
-        self.base = os.getenv("QUOTES_API_URL")
+        self.base = QUOTES_API_URL
         self.api_version = "/api/v1"
 
         # Quotes
