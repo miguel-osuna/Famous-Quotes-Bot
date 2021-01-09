@@ -82,14 +82,12 @@ if __name__ == "__main__":
                           to the rescue!\nSearch quotes by author or genre with 
                           very simple commands."""
 
-    command_prefix = COMMAND_PREFIX
-
     intents = discord.Intents.default()
     intents.members = True
 
     famous_quotes_bot = FamousQuotesBot(
         cogs_path=COGS_PATH,
-        command_prefix=command_prefix,
+        command_prefix=COMMAND_PREFIX,
         description=bot_description,
         intents=intents,
     )
