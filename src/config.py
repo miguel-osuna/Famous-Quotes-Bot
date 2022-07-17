@@ -1,3 +1,5 @@
+"""App configuration file."""
+
 import os
 from os.path import dirname, abspath, join
 

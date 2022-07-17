@@ -1,3 +1,5 @@
+"""Discord bot Utility cog."""
+
 import os
 import asyncio
 import itertools

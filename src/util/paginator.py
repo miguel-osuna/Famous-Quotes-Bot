@@ -1,3 +1,5 @@
+"""Utility pagination class."""
+
 import asyncio
 
 import discord

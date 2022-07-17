@@ -1,3 +1,5 @@
+"""Discord bot Stats cog."""
+
 import os
 from datetime import datetime
 

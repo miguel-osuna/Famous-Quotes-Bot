@@ -1,3 +1,5 @@
+"""Quotes API Client class."""
+
 import os
 import requests
 

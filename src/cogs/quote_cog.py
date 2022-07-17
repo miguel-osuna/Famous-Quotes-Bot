@@ -1,4 +1,5 @@
-import os
+"""Discord bot Quote cog."""
+
 from datetime import datetime
 
 import discord

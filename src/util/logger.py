@@ -1,3 +1,5 @@
+"""Utility logger class."""
+
 import logging
 import logging.handlers as handlers
 

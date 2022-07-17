@@ -1,3 +1,5 @@
+"""Utility cache class."""
+
 from collections import OrderedDict
 
 
