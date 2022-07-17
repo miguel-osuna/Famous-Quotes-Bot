@@ -19,7 +19,9 @@ class QuoteCog(commands.Cog, name="Quote"):
         self.quote_embeds = CacheDict(10000)
         self.api = QuotesApi(QUOTES_API_KEY)
 
-    def create_quote_embed(self, quote, author, tags, author_picture_url, channel): # pytlint: disable=no-self-use
+    def create_quote_embed(
+        self, quote, author, tags, author_picture_url, channel
+    ):  # pylint: disable=too-many-arguments, no-self-use
         """Creates an embed to display a quote."""
         embed = discord.Embed(colour=discord.Colour.blue())
         embed.description = f"```📜 {quote}```"
@@ -40,7 +42,7 @@ class QuoteCog(commands.Cog, name="Quote"):
         tag_names = ""
 
         for tag in sorted(tags):
-            tag_names += "{}\n".format(tag)
+            tag_names += f"{tag}\n"
 
         embed = discord.Embed(title="Quote Tags", colour=discord.Colour.blue())
         embed.description = tag_names
@@ -64,7 +66,7 @@ class QuoteCog(commands.Cog, name="Quote"):
         it all depends on the reaction used.
         """
 
-        # Check that the reaction channels is not done on a private channel 
+        # Check that the reaction channels is not done on a private channel
         # and the user is not a bot
         if not isinstance(reaction.message.channel, discord.DMChannel) and not user.bot:
 
@@ -134,7 +136,7 @@ class QuoteCog(commands.Cog, name="Quote"):
                 embed.timestamp = discord.Embed.Empty
                 self.quote_embeds[message.id] = embed
 
-        except Exception:
+        except Exception:  # pylint: disable=broad-except
             logger.error("Sorry, could not get quote.")
             embed = self.create_error_embed("Sorry, could not find any quote.")
             await ctx.channel.send(embed=embed)
@@ -154,7 +156,7 @@ class QuoteCog(commands.Cog, name="Quote"):
             embed = self.create_tag_list_embed(list(tags["tags"]))
             await ctx.channel.send(embed=embed)
 
-        except Exception:
+        except Exception:  # pylint: disable=broad-except
             logger.error("Could not get available tags")
             embed = self.create_error_embed("Sorry, could not get available tags.")
             await ctx.channel.send(embed=embed)

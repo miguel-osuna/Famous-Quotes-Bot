@@ -35,8 +35,8 @@ class FamousQuotesBot(commands.Bot):
                 extension = filename[:-3]
                 try:
                     self.load_extension(f"cogs.{extension}")
-                except Exception as e:
-                    logger.error(f"Failed to load extension {extension}\n{e}")
+                except Exception as exc:  # pylint: disable=broad-except
+                    logger.error("Failed to load extension %s\n%s", extension, exc)
 
     # Bot Evernt Listeners
     async def on_ready(self):
@@ -53,7 +53,10 @@ class FamousQuotesBot(commands.Bot):
         await self.change_presence(status=status, activity=activity, afk=False)
 
         logger.info(
-            f"\nLogged in as '{self.user.name}'\n(id: {self.user.id})\nVersion: {discord.__version__}\n"
+            "\nLogged in as '%s'\n" "(id: %s)\n" "Version: %s\n",
+            self.user.name,
+            self.user.id,
+            discord.__version__,
         )
 
     async def on_guild_join(self, guild):
@@ -61,9 +64,12 @@ class FamousQuotesBot(commands.Bot):
         # Find the first text channel available
 
         # If general channel exists, create message
-        greeting_message = f"""Hi there, I'm Famous Quotes Bot, thanks for adding me to your server.\n
-                               To get started, use `~help` to check more information about me.\n
-                               If you need help or find any error, join my support server at {SUPPORT_SERVER_INVITE_URL} """
+        greeting_message = (
+            f"Hi there, I'm Famous Quotes Bot, thanks for adding me to your server.\n"
+            f"To get started, use `~help` to check more information about me.\n"
+            f"If you need help or find any error, "
+            f"join my support server at {SUPPORT_SERVER_INVITE_URL}."
+        )
 
         # Embed message into general channel
 
@@ -79,9 +85,11 @@ class FamousQuotesBot(commands.Bot):
 
 if __name__ == "__main__":
     # Bot configuaration
-    bot_description = """ Are you looking for a Quote? Famous Quotes Bot is here 
-                          to the rescue!\nSearch quotes by author or genre with 
-                          very simple commands."""
+    BOT_DESCRIPTION = (
+        "Are you looking for a Quote? Famous Quotes Bot is here "
+        "to the rescue!\nSearch quotes by author or genre with "
+        "very simple commands."
+    )
 
     intents = discord.Intents.default()
     intents.members = True
@@ -89,7 +97,7 @@ if __name__ == "__main__":
     famous_quotes_bot = FamousQuotesBot(
         cogs_path=COGS_PATH,
         command_prefix=COMMAND_PREFIX,
-        description=bot_description,
+        description=BOT_DESCRIPTION,
         intents=intents,
     )
 

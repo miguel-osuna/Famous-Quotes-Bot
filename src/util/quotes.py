@@ -7,6 +7,7 @@ from config import QUOTES_API_URL
 
 class URLs:
     """Client class for Quotes API."""
+
     def __init__(self):
         self.base = QUOTES_API_URL
         self.api_version = "/api/v1"
@@ -42,7 +43,7 @@ class URLs:
         return self.base + self.api_version + self.tags
 
 
-class BearerAuth(requests.auth.AuthBase):
+class BearerAuth(requests.auth.AuthBase):  # pylint: disable=too-few-public-methods
     """Custom authentication class for Quotes API."""
 
     def __init__(self, token):

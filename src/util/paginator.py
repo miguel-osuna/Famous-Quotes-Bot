@@ -5,7 +5,8 @@ import asyncio
 import discord
 from discord.ext.commands import Paginator as CommandPaginator
 
-class Pages:
+
+class Pages:  # pylint: disable=too-many-instance-attributes
     """Implements a paginator that queries the user for the
     pagination interface.
 
@@ -201,7 +202,7 @@ class Pages:
         try:
             # Delete all the messages sent previously
             await self.channel.delete_messages(to_delete)
-        except Exception:
+        except Exception:  # pylint: disable=broad-except
             pass
 
     async def show_help(self):
@@ -283,9 +284,7 @@ class Pages:
                 self.paginating = False
                 try:
                     await self.message.clear_reactions()
-                except:
-                    pass
-                finally:
+                except Exception:  # pylint: disable=broad-except
                     break
 
             try:
@@ -294,8 +293,8 @@ class Pages:
                 await self.message.remove_reaction(
                     payload.emoji, discord.Object(id=payload.user_id)
                 )
-            except Exception:
-                pass  # can't remove it so don't bother doing so
+            except Exception:  # pylint: disable=broad-except
+                pass
 
             await self.match()
 

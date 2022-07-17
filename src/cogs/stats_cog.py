@@ -27,8 +27,12 @@ class StatsCog(commands.Cog, name="Stats"):
         minutes, remainder = divmod(remainder, 60)
         seconds = remainder
 
-        time_difference = "**{}** *months*, **{}** *days*, **{}** *hours*, **{}** *minutes*, **{}** *seconds*".format(
-            months, days, hours, minutes, seconds
+        time_difference = (
+            f"**{months}** *months*, "
+            f"**{days}** *days*, "
+            f"**{hours}** *hours*, "
+            f"**{minutes}** *minutes*, "
+            f"**{seconds}** *seconds*"
         )
 
         return time_difference
@@ -48,7 +52,7 @@ class StatsCog(commands.Cog, name="Stats"):
 
         return embed
 
-    def create_about_embed(
+    def create_about_embed(  # pylint: disable=too-many-arguments
         self,
         server_invite_url,
         members,
@@ -62,7 +66,11 @@ class StatsCog(commands.Cog, name="Stats"):
         embed = discord.Embed(color=discord.Color.dark_magenta())
         embed.title = "🤖 Official Famous Quotes Bot Server Invite"
         embed.url = server_invite_url
-        embed.description = "Famous Quotes Bot is a bot that provides famous quotes by author, category or random."
+        embed.description = (
+            "Famous Quotes Bot is a bot that provides "
+            "famous quotes by author, "
+            "category or random."
+        )
 
         end_datetime = datetime.utcnow()
         uptime_string = self.get_time_difference(start_datetime, end_datetime)
@@ -95,7 +103,10 @@ class StatsCog(commands.Cog, name="Stats"):
         """Creates an embed that includes a bot invitation to a server."""
         embed = discord.Embed(color=discord.Color.dark_magenta())
         embed.title = "🤖 Add Famous Quotes Bot to your Discord Server!"
-        embed.description = "If you're interested in adding Famous Quotes Bot to your server, you'll find some links below to help you get started."
+        embed.description = (
+            "If you're interested in adding Famous Quotes Bot to your server, "
+            "you'll find some links below to help you get started."
+        )
         embed.add_field(
             name="Famous Bot Invite", value=f"{bot_invite_url}", inline=False
         )

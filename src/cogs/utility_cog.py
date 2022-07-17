@@ -141,7 +141,7 @@ class PaginatedHelpCommand(commands.HelpCommand):
         )
 
     async def on_help_command_error(self, ctx, error):
-        """"Callback to run on help command error."""
+        """Callback to run on help command error."""
         if isinstance(error, commands.CommandInvokeError):
             await ctx.send(str(error.original))
 
@@ -164,8 +164,8 @@ class PaginatedHelpCommand(commands.HelpCommand):
         This function is called when the help command is called with no arguments.
         """
 
-        def key(c):
-            return c.cog_name or "\u200bNo Category"
+        def key(cog):
+            return cog.cog_name or "\u200bNo Category"
 
         bot = self.context.bot
         entries = await self.filter_commands(bot.commands, sort=True, key=key)
@@ -182,7 +182,7 @@ class PaginatedHelpCommand(commands.HelpCommand):
             actual_cog = bot.get_cog(cog)
 
             # Get the description if it exists (and the cog is valid) or return Empty embed.
-            description = (actual_cog and actual_cog.description) or discord.Embed.Empty
+            description = actual_cog.description if actual_cog else discord.Embed.Empty
 
             # Generate the pages for the cog commands
             nested_pages.extend(
@@ -282,8 +282,8 @@ class Utility(commands.Cog):
         """Command which loads a module."""
         try:
             self.bot.load_extension(f"cogs.{cog}")
-        except Exception as e:
-            await ctx.send(f"**`ERROR`:** {type(e).__name__} - {e}")
+        except Exception as exc:  # pylint: disable=broad-except
+            await ctx.send(f"**`ERROR`:** {type(exc).__name__} - {exc}")
         else:
             await ctx.send("**`SUCCESS`**")
 
@@ -298,8 +298,8 @@ class Utility(commands.Cog):
         """Command which unloads a module."""
         try:
             self.bot.unload_extension(f"cogs.{cog}")
-        except Exception as e:
-            await ctx.send(f"**`ERROR`:** {type(e).__name__} - {e}")
+        except Exception as exc:  # pylint: disable=broad-except
+            await ctx.send(f"**`ERROR`:** {type(exc).__name__} - {exc}")
         else:
             await ctx.send("**`SUCCESS`**")
 
@@ -314,8 +314,8 @@ class Utility(commands.Cog):
         """Command which reloads a module."""
         try:
             self.bot.reload_extension(f"cogs.{cog}")
-        except Exception as e:
-            await ctx.send(f"**`ERROR`:** {type(e).__name__} - {e}")
+        except Exception as exc:  # pylint: disable=broad-except
+            await ctx.send(f"**`ERROR`:** {type(exc).__name__} - {exc}")
         else:
             await ctx.send("**`SUCCESS`**")
 
