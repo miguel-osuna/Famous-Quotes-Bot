@@ -38,7 +38,7 @@ class Pages:
     """
 
     def __init__(self, ctx, *, entries, per_page=12, show_entry_count=True):
-        """ Initialisation for Page class instances. """
+        """Initialisation for Page class instances."""
         self.bot = ctx.bot
         self.entries = entries
         self.message = ctx.message
@@ -60,31 +60,37 @@ class Pages:
 
         # Reaction map for the navigation
         self.reaction_emojis = [
-            ("\N{BLACK LEFT-POINTING DOUBLE TRIANGLE}", self.first_page,),
+            (
+                "\N{BLACK LEFT-POINTING DOUBLE TRIANGLE}",
+                self.first_page,
+            ),
             ("\N{BLACK LEFT-POINTING TRIANGLE}", self.previous_page),
             ("\N{BLACK RIGHT-POINTING TRIANGLE}", self.next_page),
-            ("\N{BLACK RIGHT-POINTING DOUBLE TRIANGLE}", self.last_page,),
+            (
+                "\N{BLACK RIGHT-POINTING DOUBLE TRIANGLE}",
+                self.last_page,
+            ),
             ("\N{INPUT SYMBOL FOR NUMBERS}", self.numbered_page),
             ("\N{BLACK SQUARE FOR STOP}", self.stop_pages),
             ("\N{INFORMATION SOURCE}", self.show_help),
         ]
 
     def get_page(self, page):
-        """ Gets the entries from a specific page. """
+        """Gets the entries from a specific page."""
         base = (page - 1) * self.per_page
         return self.entries[base : base + self.per_page]
 
     def get_content(self, entries, page, *, first=False):
-        """ Gets the content from a page. """
+        """Gets the content from a page."""
         return None
 
     def get_embed(self, entries, page, *, first=False):
-        """ Gets embed for a page. """
+        """Gets embed for a page."""
         self.prepare_embed(entries, page, first=first)
         return self.embed
 
     def prepare_embed(self, entries, page, *, first=False):
-        """ Prepares embed for a page. """
+        """Prepares embed for a page."""
         p = []
 
         # Adds all the entries
@@ -106,7 +112,7 @@ class Pages:
         self.embed.description = "\n".join(p)
 
     async def show_page(self, page, *, first=False):
-        """ Shows the specified page with its entries. """
+        """Shows the specified page with its entries."""
         self.current_page = page
         entries = self.get_page(page)
         content = self.get_content(entries, page, first=first)
@@ -132,35 +138,35 @@ class Pages:
             await self.message.add_reaction(reaction)
 
     async def checked_show_page(self, page):
-        """ Checks that the given page not exceed 
-        the min and max index of the whole entry pages. 
+        """Checks that the given page not exceed
+        the min and max index of the whole entry pages.
         """
         if page != 0 and page <= self.maximum_pages:
             await self.show_page(page)
 
     async def first_page(self):
-        """ Goes to the first page. """
+        """Goes to the first page."""
         await self.show_page(1)
 
     async def last_page(self):
-        """ Goes to the last page. """
+        """Goes to the last page."""
         await self.show_page(self.maximum_pages)
 
     async def next_page(self):
-        """ Goes to the next page. """
+        """Goes to the next page."""
         await self.checked_show_page(self.current_page + 1)
 
     async def previous_page(self):
-        """ Goes to the previous page. """
+        """Goes to the previous page."""
         await self.checked_show_page(self.current_page - 1)
 
     async def show_current_page(self):
-        """ Shows the current index page. """
+        """Shows the current index page."""
         if self.paginating:
             await self.show_page(self.current_page)
 
     async def numbered_page(self):
-        """ Lets you type a page number to go to. """
+        """Lets you type a page number to go to."""
         to_delete = []
         to_delete.append(await self.channel.send("What page do you want to go to?"))
 
@@ -202,7 +208,7 @@ class Pages:
             pass
 
     async def show_help(self):
-        """ Shows this message. """
+        """Shows this message."""
         messages = ["Welcome to the interactive paginator!\n"]
         messages.append(
             "This interactively allows you to see pages of text by navigating with "
@@ -233,12 +239,12 @@ class Pages:
         self.bot.loop.create_task(go_back_to_current_page())
 
     async def stop_pages(self):
-        """ Stops the interactive pagination session. """
+        """Stops the interactive pagination session."""
         await self.message.delete()
         self.paginating = False
 
     def react_check(self, payload):
-        """ Check the reaction from the user. """
+        """Check the reaction from the user."""
 
         # If reaction user is different from the help command
         if payload.user_id != self.author.id:
@@ -257,7 +263,7 @@ class Pages:
         return False
 
     async def paginate(self):
-        """ Actually paginate the entries and run the interactive loop if necessary. """
+        """Actually paginate the entries and run the interactive loop if necessary."""
         first_page = self.show_page(1, first=True)
 
         if not self.paginating:
@@ -298,7 +304,7 @@ class Pages:
 
 
 class FieldPages(Pages):
-    """ Similar to Pages except entries should be a list of
+    """Similar to Pages except entries should be a list of
     tuples having (key, value) to show as embed fields instead.
     """
 
@@ -320,7 +326,7 @@ class FieldPages(Pages):
 
 
 class TextPages(Pages):
-    """ Uses a commands.Paginator internally to paginate some text. """
+    """Uses a commands.Paginator internally to paginate some text."""
 
     def __init__(self, ctx, text, *, prefix="```", suffix="```", max_size=2000):
         paginator = CommandPaginator(

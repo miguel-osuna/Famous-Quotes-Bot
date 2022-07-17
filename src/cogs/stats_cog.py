@@ -11,7 +11,7 @@ logger = generate_logger(__name__)
 
 
 class StatsCog(commands.Cog, name="Stats"):
-    """ Bot statistics cog. """
+    """Bot statistics cog."""
 
     def __init__(self, bot):
         self.bot = bot
@@ -32,7 +32,7 @@ class StatsCog(commands.Cog, name="Stats"):
         return time_difference
 
     def create_uptime_embed(self, start_datetime):
-        """ Creates an embed to show the total uptime of the bot. """
+        """Creates an embed to show the total uptime of the bot."""
         # Create the uptime string
         end_datetime = datetime.utcnow()
         uptime_string = self.get_time_difference(start_datetime, end_datetime)
@@ -56,7 +56,7 @@ class StatsCog(commands.Cog, name="Stats"):
         version,
         start_datetime,
     ):
-        """ Creates an embed to show information about the bot. """
+        """Creates an embed to show information about the bot."""
         embed = discord.Embed(color=discord.Color.dark_magenta())
         embed.title = "🤖 Official Famous Quotes Bot Server Invite"
         embed.url = server_invite_url
@@ -83,14 +83,14 @@ class StatsCog(commands.Cog, name="Stats"):
         return embed
 
     def create_version_embed(self, version):
-        """ Creates an embed to show the bots version. """
+        """Creates an embed to show the bots version."""
         embed = discord.Embed(color=discord.Color.dark_magenta())
         embed.title = f"Famous Quotes Bot `{version}`"
         embed.timestamp = datetime.utcnow()
         return embed
 
     def create_join_embed(self, version, bot_invite_url, server_invite_url):
-        """ Creates an embed that includes a bot invitation to a server. """
+        """Creates an embed that includes a bot invitation to a server."""
         embed = discord.Embed(color=discord.Color.dark_magenta())
         embed.title = "🤖 Add Famous Quotes Bot to your Discord Server!"
         embed.description = "If you're interested in adding Famous Quotes Bot to your server, you'll find some links below to help you get started."
@@ -108,18 +108,18 @@ class StatsCog(commands.Cog, name="Stats"):
 
     # Class Methods
     async def cog_before_invoke(self, ctx):
-        """ A special method that acts as a cog local pre-invoke hook. """
+        """A special method that acts as a cog local pre-invoke hook."""
         await ctx.trigger_typing()
         return await super().cog_before_invoke(ctx)
 
     async def cog_after_invoke(self, ctx):
-        """ A special method that acts as a cog local post-invoke hook. """
+        """A special method that acts as a cog local post-invoke hook."""
         return await super().cog_after_invoke(ctx)
 
     # Commands
     @commands.command(name="uptime", help="Check the bots uptime")
     async def uptime(self, ctx):
-        """ Tells how long the bot has been up for. """
+        """Tells how long the bot has been up for."""
         start_datetime = datetime(2020, 12, 25)
 
         embed = self.create_uptime_embed(start_datetime)
@@ -127,7 +127,7 @@ class StatsCog(commands.Cog, name="Stats"):
 
     @commands.command(name="about", help="Tells information about the bot itself.")
     async def about(self, ctx):
-        """ Tells you information about the bot itself. """
+        """Tells you information about the bot itself."""
         # Embed variables
         version = VERSION
         start_datetime = datetime(2020, 12, 25)
@@ -158,7 +158,7 @@ class StatsCog(commands.Cog, name="Stats"):
 
     @commands.command(name="version", help="Tells the version of the bot.")
     async def version(self, ctx):
-        """ Tells the version of the bot. """
+        """Tells the version of the bot."""
         # Get bot version
         version = VERSION
         embed = self.create_version_embed(version)
@@ -170,7 +170,7 @@ class StatsCog(commands.Cog, name="Stats"):
         help="Sends a link to add Famous Quotes Bot to your server.",
     )
     async def join(self, ctx):
-        """ Sends a link to add Famous Quotes Bot to your server. """
+        """Sends a link to add Famous Quotes Bot to your server."""
         version = VERSION
         bot_invite_url = BOT_INVITE_URL
         server_invite_url = SUPPORT_SERVER_INVITE_URL
@@ -179,12 +179,12 @@ class StatsCog(commands.Cog, name="Stats"):
 
 
 def setup(bot):
-    """ Sets up the stats cog for the bot. """
+    """Sets up the stats cog for the bot."""
     logger.info("Loading Stats Cog")
     bot.add_cog(StatsCog(bot))
 
 
 def teardown(bot):
-    """ Tears down the stats cog for the bot. """
+    """Tears down the stats cog for the bot."""
     logger.info("Unloading Stats Cog")
     bot.remove_cog("stats_cog")

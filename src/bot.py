@@ -19,7 +19,7 @@ logger = generate_logger(__name__)
 
 
 class FamousQuotesBot(commands.Bot):
-    """ Discord Bot Client. """
+    """Discord Bot Client."""
 
     def __init__(self, cogs_path, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -39,7 +39,7 @@ class FamousQuotesBot(commands.Bot):
 
     # Bot Evernt Listeners
     async def on_ready(self):
-        """ Called when the client is done preparing the data received from Discord. """
+        """Called when the client is done preparing the data received from Discord."""
 
         if not hasattr(self, "uptime"):
             self.uptime = datetime.utcnow()
@@ -56,7 +56,7 @@ class FamousQuotesBot(commands.Bot):
         )
 
     async def on_guild_join(self, guild):
-        """ Called when a Guild is either created by the Client or when the Client joins a guild. """
+        """Called when a Guild is either created by the Client or when the Client joins a guild."""
         # Find the first text channel available
 
         # If general channel exists, create message
@@ -67,7 +67,7 @@ class FamousQuotesBot(commands.Bot):
         # Embed message into general channel
 
     async def on_guild_remove(self, guild):
-        """ Called when leaving or kicked from a discord server. """
+        """Called when leaving or kicked from a discord server."""
         # Find the first text channel available
 
         # If general channel exists, create message

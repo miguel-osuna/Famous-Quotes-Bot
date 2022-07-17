@@ -3,7 +3,7 @@ import logging.handlers as handlers
 
 
 def generate_logger(module_name):
-    """ Generates a custom logger. """
+    """Generates a custom logger."""
 
     # Create custom logger
     logger = logging.getLogger(module_name)
