@@ -1,10 +1,9 @@
 """Discord bot Stats cog."""
 
-import os
 from datetime import datetime
 
 import discord
-from discord.ext import commands, tasks
+from discord.ext import commands
 
 from util import generate_logger
 from config import BOT_INVITE_URL, SUPPORT_SERVER_INVITE_URL, VERSION
@@ -20,6 +19,7 @@ class StatsCog(commands.Cog, name="Stats"):
         self.uptime = datetime.now()
 
     def get_time_difference(self, start_datetime, end_datetime):
+        """Returns a string with the difference between to datetime objects."""
         delta = end_datetime - start_datetime
         months, remainder = divmod(delta.seconds, 60 * 60 * 24 * 30)
         days, remainder = divmod(remainder, 60 * 60 * 24)
@@ -54,7 +54,7 @@ class StatsCog(commands.Cog, name="Stats"):
         members,
         servers,
         channels,
-        commands,
+        bot_commands,
         version,
         start_datetime,
     ):
@@ -77,7 +77,7 @@ class StatsCog(commands.Cog, name="Stats"):
         embed.add_field(name="❓ Status", value="Online", inline=True)
         embed.add_field(name="⏱️ Uptime", value=f"{uptime_string}", inline=True)
         embed.add_field(
-            name="⚙️ Commands", value=f"**{commands}** in total", inline=True
+            name="⚙️ Commands", value=f"**{bot_commands}** in total", inline=True
         )
 
         embed.set_footer(text=f"Famous Quotes Bot {version}")
@@ -135,7 +135,7 @@ class StatsCog(commands.Cog, name="Stats"):
         start_datetime = datetime(2020, 12, 25)
         server_invite_url = SUPPORT_SERVER_INVITE_URL
         total_members = len(self.bot.users)
-        commands = len(self.bot.commands)
+        bot_commands = len(self.bot.commands)
 
         guilds = 0
         text_channels = 0
@@ -152,7 +152,7 @@ class StatsCog(commands.Cog, name="Stats"):
             total_members,
             guilds,
             text_channels,
-            commands,
+            bot_commands,
             version,
             start_datetime,
         )

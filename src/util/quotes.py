@@ -1,12 +1,12 @@
 """Quotes API Client class."""
 
-import os
 import requests
 
 from config import QUOTES_API_URL
 
 
 class URLs:
+    """Client class for Quotes API."""
     def __init__(self):
         self.base = QUOTES_API_URL
         self.api_version = "/api/v1"
@@ -65,8 +65,7 @@ class QuotesApi:
 
         if payload is not None:
             return requests.get(url, auth=BearerAuth(self.api_key), params=payload)
-        else:
-            return requests.get(url, auth=BearerAuth(self.api_key))
+        return requests.get(url, auth=BearerAuth(self.api_key))
 
     def __put_data(self, url, data):
         """Private method that performs a put request."""

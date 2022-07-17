@@ -1,7 +1,6 @@
 """Discord bot client file."""
 
 import os
-from os.path import dirname, abspath, join
 from datetime import datetime
 
 import discord
@@ -14,7 +13,6 @@ from config import (
     DISCORD_TOKEN,
     COMMAND_PREFIX,
     COGS_PATH,
-    BASE_PROJECT_PATH,
 )
 
 logger = generate_logger(__name__)
@@ -31,6 +29,7 @@ class FamousQuotesBot(commands.Bot):
         self.load_extensions()
 
     def load_extensions(self):
+        """Load bot cogs."""
         for filename in os.listdir(self.cogs_path):
             if filename.endswith(".py"):
                 extension = filename[:-3]

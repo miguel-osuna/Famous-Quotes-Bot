@@ -5,11 +5,6 @@ import asyncio
 import discord
 from discord.ext.commands import Paginator as CommandPaginator
 
-
-class CannotPaginate(Exception):
-    pass
-
-
 class Pages:
     """Implements a paginator that queries the user for the
     pagination interface.
@@ -93,11 +88,11 @@ class Pages:
 
     def prepare_embed(self, entries, page, *, first=False):
         """Prepares embed for a page."""
-        p = []
+        pages = []
 
         # Adds all the entries
         for index, entry in enumerate(entries, 1 + ((page - 1) * self.per_page)):
-            p.append(f"{index}. {entry}")
+            pages.append(f"{index}. {entry}")
 
         if self.maximum_pages > 1:
             if self.show_entry_count:
@@ -108,10 +103,10 @@ class Pages:
             self.embed.set_footer(text=text)
 
         if self.paginating and first:
-            p.append("")
-            p.append("React with \N{INFORMATION SOURCE} for more information.")
+            pages.append("")
+            pages.append("React with \N{INFORMATION SOURCE} for more information.")
 
-        self.embed.description = "\n".join(p)
+        self.embed.description = "\n".join(pages)
 
     async def show_page(self, page, *, first=False):
         """Shows the specified page with its entries."""
@@ -174,11 +169,11 @@ class Pages:
 
         # Check if the content from the message is a digit
         # or if it comes from author of the help command
-        def message_check(m):
+        def message_check(message):
             return (
-                m.author == self.author
-                and self.channel == m.channel
-                and m.content.isdigit()
+                message.author == self.author
+                and self.channel == message.channel
+                and message.content.isdigit()
             )
 
         try:
@@ -299,7 +294,7 @@ class Pages:
                 await self.message.remove_reaction(
                     payload.emoji, discord.Object(id=payload.user_id)
                 )
-            except:
+            except Exception:
                 pass  # can't remove it so don't bother doing so
 
             await self.match()

@@ -3,21 +3,23 @@
 from datetime import datetime
 
 import discord
-from discord.ext import commands, tasks
+from discord.ext import commands
 
-from util import generate_logger, Pages, QuotesApi, CacheDict
+from util import generate_logger, QuotesApi, CacheDict
 from config import QUOTES_API_KEY
 
 logger = generate_logger(__name__)
 
 
 class QuoteCog(commands.Cog, name="Quote"):
+    """Quote cog class."""
+
     def __init__(self, bot):
         self.bot = bot
         self.quote_embeds = CacheDict(10000)
         self.api = QuotesApi(QUOTES_API_KEY)
 
-    def create_quote_embed(self, quote, author, tags, author_picture_url, channel):
+    def create_quote_embed(self, quote, author, tags, author_picture_url, channel): # pytlint: disable=no-self-use
         """Creates an embed to display a quote."""
         embed = discord.Embed(colour=discord.Colour.blue())
         embed.description = f"```📜 {quote}```"
@@ -62,7 +64,8 @@ class QuoteCog(commands.Cog, name="Quote"):
         it all depends on the reaction used.
         """
 
-        # Check that the reaction channels is not done on a private channel and the user is not a bot
+        # Check that the reaction channels is not done on a private channel 
+        # and the user is not a bot
         if not isinstance(reaction.message.channel, discord.DMChannel) and not user.bot:
 
             if reaction.emoji == "❤️":
@@ -96,6 +99,7 @@ class QuoteCog(commands.Cog, name="Quote"):
         help="Sends a quote by author and/or tags.",
     )
     async def quote(self, ctx, tags: str = None, *, author: str = None):
+        """Sends a quote as a message."""
         try:
             # Get random quote filtered by tags and authors
             query_params = {}

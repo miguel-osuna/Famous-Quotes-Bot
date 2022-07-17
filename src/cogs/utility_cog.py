@@ -1,11 +1,10 @@
 """Discord bot Utility cog."""
 
-import os
 import asyncio
 import itertools
 
 import discord
-from discord.ext import commands, tasks
+from discord.ext import commands
 
 from util import generate_logger, Pages
 from config import SUPPORT_SERVER_INVITE_URL
@@ -29,12 +28,14 @@ class HelpPaginator(Pages):
         self.is_bot = False
 
     def get_bot_page(self, page):
+        """Gets a list of page commands."""
         cog, description, commands = self.entries[page - 1]
         self.title = f"{cog} Commands"
         self.description = description
         return commands
 
     def prepare_embed(self, entries, page, *, first=False):
+        """Prepares the pagination page message."""
         self.embed.clear_fields()
         self.embed.title = self.title
         self.embed.description = self.description
@@ -129,6 +130,8 @@ class HelpPaginator(Pages):
 
 
 class PaginatedHelpCommand(commands.HelpCommand):
+    """Class for a bot paginated help command."""
+
     def __init__(self):
         super().__init__(
             command_attrs={
@@ -138,6 +141,7 @@ class PaginatedHelpCommand(commands.HelpCommand):
         )
 
     async def on_help_command_error(self, ctx, error):
+        """"Callback to run on help command error."""
         if isinstance(error, commands.CommandInvokeError):
             await ctx.send(str(error.original))
 
@@ -221,12 +225,15 @@ class PaginatedHelpCommand(commands.HelpCommand):
             page_or_embed.description = command.help or "No help found..."
 
     async def send_command_help(self, command):
+        """Callback to run on send command help."""
+
         # No pagination necessary for a single command.
         embed = discord.Embed(colour=discord.Colour.blue())
         self.common_command_formatting(embed, command)
         await self.context.send(embed=embed)
 
     async def send_group_help(self, group):
+        """Callback to run on send group help."""
         subcommands = group.commands
         if len(subcommands) == 0:
             return await self.send_command_help(group)
@@ -250,6 +257,7 @@ class Utility(commands.Cog):
         bot.help_command.cog = self
 
     def cog_unload(self):
+        """Unload a cog from the bot."""
         self.bot.help_command = self.old_help_command
 
     # Class Methods
@@ -277,7 +285,7 @@ class Utility(commands.Cog):
         except Exception as e:
             await ctx.send(f"**`ERROR`:** {type(e).__name__} - {e}")
         else:
-            await ctx.send(f"**`SUCCESS`**")
+            await ctx.send("**`SUCCESS`**")
 
     @commands.is_owner()
     @commands.command(
@@ -293,7 +301,7 @@ class Utility(commands.Cog):
         except Exception as e:
             await ctx.send(f"**`ERROR`:** {type(e).__name__} - {e}")
         else:
-            await ctx.send(f"**`SUCCESS`**")
+            await ctx.send("**`SUCCESS`**")
 
     @commands.is_owner()
     @commands.command(
@@ -309,7 +317,7 @@ class Utility(commands.Cog):
         except Exception as e:
             await ctx.send(f"**`ERROR`:** {type(e).__name__} - {e}")
         else:
-            await ctx.send(f"**`SUCCESS`**")
+            await ctx.send("**`SUCCESS`**")
 
 
 def setup(bot):

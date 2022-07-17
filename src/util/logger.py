@@ -1,7 +1,6 @@
 """Utility logger class."""
 
 import logging
-import logging.handlers as handlers
 
 
 def generate_logger(module_name):
