@@ -4,22 +4,20 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-mypy = "*"
-pytest = "*"
-pytest-sugar = "*"
-pytest-cov = "*"
-pylint = "*"
-black = "*"
-bpython = "*"
+pylint = "==2.14.4"
+black = "==22.6.0"
+bpython = "==0.22.1"
 
 [packages]
-"discord.py" = "*"
-requests = "*"
+"discord.py" = "==1.7.3"
+requests = "==2.28.1"
 
 [scripts]
+format = "black ."
+lint = "pylint src"
 
 [requires]
-python_version = "3.8"
+python_version = "3.9"
 
 [pipenv]
 allow_prereleases = true

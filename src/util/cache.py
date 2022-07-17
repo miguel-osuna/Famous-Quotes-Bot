@@ -1,8 +1,10 @@
+"""Utility cache class."""
+
 from collections import OrderedDict
 
 
 class CacheDict(OrderedDict):
-    """Dict with a limted lenght, ejecting LRUs as needed. """
+    """Dict with a limted lenght, ejecting LRUs as needed."""
 
     def __init__(self, cache_len=10, *args, **kwargs):
         assert cache_len > 0
