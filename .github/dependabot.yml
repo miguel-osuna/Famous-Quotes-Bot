@@ -17,6 +17,10 @@ updates:
     # Raise all pipenv pull requests with custom labels
     labels:
       - "chore"
+    # Sets a prefix for commit messages
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(dev-deps)"
 
   # Enable version updates for docker image
   - package-ecosystem: "docker"
@@ -32,3 +36,6 @@ updates:
     # Raise all pipenv pull requests with custom labels
     labels:
       - "chore"
+    # Sets a prefix for commit messages
+    commit-message:
+      prefix: "chore(docker)"
