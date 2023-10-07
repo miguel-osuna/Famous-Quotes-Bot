@@ -4,7 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-pylint = "==2.17.6"
+pylint = "==3.0.1"
 black = "==23.9.1"
 bpython = "==0.24"
 
