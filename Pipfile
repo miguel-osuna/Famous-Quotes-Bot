@@ -5,7 +5,7 @@ verify_ssl = true
 
 [dev-packages]
 pylint = "==3.0.3"
-black = "==23.12.1"
+black = "==24.1.1"
 bpython = "==0.24"
 
 [packages]
