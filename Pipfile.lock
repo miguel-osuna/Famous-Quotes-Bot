@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "71cbaa4e2e1ca291f2a9a8404311a1d03dee4bb39e0e947ce82c7304ea2994c0"
+            "sha256": "fc250e6889081bdbee9fe24aea06c9c8b16a24c9da0e0257e1eeafe1e73ad942"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -483,11 +483,11 @@
         },
         "astroid": {
             "hashes": [
-                "sha256:4148645659b08b70d72460ed1921158027a9e53ae8b7234149b1400eddacbb93",
-                "sha256:92fcf218b89f449cdf9f7b39a269f8d5d617b27be68434912e11e79203963a17"
+                "sha256:951798f922990137ac090c53af473db7ab4e70c770e6d7fae0cec59f74411819",
+                "sha256:ac248253bfa4bd924a0de213707e7ebeeb3138abeb48d798784ead1e56d419d4"
             ],
             "markers": "python_full_version >= '3.8.0'",
-            "version": "==3.0.3"
+            "version": "==3.1.0"
         },
         "attrs": {
             "hashes": [
@@ -1005,12 +1005,12 @@
         },
         "pylint": {
             "hashes": [
-                "sha256:59ab3532506f32affefeb50d5057a221bb351f5a1383fa36c424c2c6c05e7005",
-                "sha256:d73b70b3fff8f3fbdcb49a209b9c7d71d8090c138d61d576d1895e152cb392b3"
+                "sha256:507a5b60953874766d8a366e8e8c7af63e058b26345cfcb5f91f89d987fd6b74",
+                "sha256:6a69beb4a6f63debebaab0a3477ecd0f559aa726af4954fc948c51f7a2549e23"
             ],
             "index": "pypi",
             "markers": "python_full_version >= '3.8.0'",
-            "version": "==3.0.4"
+            "version": "==3.1.0"
         },
         "pyxdg": {
             "hashes": [
@@ -1038,11 +1038,11 @@
         },
         "tomlkit": {
             "hashes": [
-                "sha256:75baf5012d06501f07bee5bf8e801b9f343e7aac5a92581f20f80ce632e6b5a4",
-                "sha256:b0a645a9156dc7cb5d3a1f0d4bab66db287fcb8e0430bdd4664a095ea16414ba"
+                "sha256:5cd82d48a3dd89dee1f9d64420aa20ae65cfbd00668d6f094d7578a78efbb77b",
+                "sha256:7ca1cfc12232806517a8515047ba66a19369e71edf2439d0f5824f91032b6cc3"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==0.12.3"
+            "version": "==0.12.4"
         },
         "urllib3": {
             "hashes": [
