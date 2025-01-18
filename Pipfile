@@ -6,7 +6,7 @@ verify_ssl = true
 [dev-packages]
 pylint = "==3.3.3"
 black = "==24.10.0"
-bpython = "==0.24"
+bpython = "==0.25"
 
 [packages]
 "discord.py" = "==1.7.3"
