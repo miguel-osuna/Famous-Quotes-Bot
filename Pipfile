@@ -10,7 +10,7 @@ bpython = "==0.25"
 
 [packages]
 "discord.py" = "==1.7.3"
-requests = "==2.32.3"
+requests = "==2.32.4"
 
 [scripts]
 format = "black ."
